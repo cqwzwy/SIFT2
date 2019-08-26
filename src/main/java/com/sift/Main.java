@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -21,6 +23,10 @@ import com.sift.Match;
 import com.sift.MatchKeys;
 import com.sift.RenderImage;
 import com.sift.ResultList.Info;
+import com.SIFTresult.AList;
+import com.SIFTresult.Result;
+import com.brief.gray;
+import com.lowagie.text.Font;
 import com.sift.KDFeaturePoint;
 
 public class Main {
@@ -104,6 +110,7 @@ public class Main {
 			}else if(i==_x1.length-1) {
 				gs.drawLine((int)_x1[i]*2, (int)_y1[i]*2, (int)_x1[0]*2, (int)_y1[0]*2);
 			}*/
+			
 			gs.drawOval(((int)_x1[i])*2, ((int)_y1[i])*2,3, 3);
 
 		}
@@ -114,8 +121,8 @@ public class Main {
 			}else if(i==_x2.length-1) {
 				gs.drawLine(((int)_x2[i]+lw)*2, ((int)_y2[i]+lh)*2, ((int)_x2[0]+lw)*2, ((int)_y2[0]+lh)*2);
 			}*/
+			
 			gs.drawOval(((int)_x2[i]+lw)*2, ((int)_y2[i]+lh)*2,3, 3);
-
 		}
 		
 		gs.dispose();
@@ -145,14 +152,21 @@ public class Main {
 		index=0;
 		for (Match m : ms) {
 			g.setColor(color[(int)(Math.random()*8)]);
+			
 			KDFeaturePoint fromPoint = m.fp1;
 			KDFeaturePoint toPoint = m.fp2;
 			kd1[index]=fromPoint;
 			kd2[index]=toPoint;
+			String str=(int)fromPoint.x+","+(int)fromPoint.y;
+			String str1=(int)toPoint.x+","+(int)toPoint.y;
+			java.awt.Font  font=new java.awt.Font("宋体",Font.BOLD,10);
+			g.setFont(font);
 			g.drawOval((int) fromPoint.x, (int) fromPoint.y, 3, 3);
 			g.drawOval((int) toPoint.x+ lw, (int) toPoint.y+ lh, 3, 3);
 			g.drawLine((int) fromPoint.x, (int) fromPoint.y, (int) toPoint.x
 					+ lw, (int) toPoint.y + lh);
+			g.drawString(str, (int) fromPoint.x, (int) fromPoint.y);
+			g.drawString(str1, (int) toPoint.x+lw, (int) toPoint.y+lh);
 			index++;
 		}
 		
@@ -167,7 +181,7 @@ public class Main {
 	
 	//批量生成特征点
 	
-	public static void FilesFeatureRequest(String path,String savepath){
+	public static void FilesFeatureRequest(String path,String savepath,String Haming){
 		
 		File file=new File(path);
 		
@@ -187,6 +201,9 @@ public class Main {
 				SIFT sift=new SIFT();
 				sift.detectFeatures(ri.toPixelFloatArray(null));
 				List<KDFeaturePoint> point=sift.getGlobalKDFeaturePoints();
+				if(point.size()<=1) {
+					continue;
+				}
 				System.out.println("特征点的数目："+point.size());
 				KDFeaturePointListInfo kdli=new KDFeaturePointListInfo();
 				kdli.setList(point);
@@ -195,6 +212,7 @@ public class Main {
 				kdli.setHeight(ri.getHeight());
 				String save=savepath+"\\"+f.getName().substring(0, f.getName().lastIndexOf("."))+"KD数据.txt";
 				KDFeaturePointWriter.writeComplete(save, kdli);
+				gray.Writer(f.getAbsolutePath(), Haming+"\\"+f.getName().substring(0,f.getName().lastIndexOf("."))+"哈希.txt");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -277,10 +295,22 @@ public class Main {
 		System.out.println(f1.getName()+"  特征点数目 ："+p2.size());
 		System.out.println(f2.getName()+"  特征点数目 ："+p1.size());
 		List<Match> ms=MatchKeys.findMatchesBBF(p1, p2);
-		
+		double screen=0.0;
 		ms=MatchKeys.filterMore(ms);
-		
-		
+		if(ms.size()>=3) {
+			screen=screening.Screen(ms,path,path2);
+		}
+		int Haming=gray.diff(gray.getH(path),gray.getH(path2));
+		float result=0.0f;
+		float n_1=p1.size();    //原图
+		float n_2=p2.size();	//库中的图
+		float n_3=ms.size();	//匹配的特征点个数
+		float result_1=n_3/n_1;   //占原图的比例
+		float result_2=n_3/n_2;   //占库中图的比例
+		System.out.print("   匹配率 ：  "+result_1+"  结果图像名称 ："+resultpath+".jpg  "
+				+"    对比图像名称 ：    "+path2+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
+				+"    汉明距离 ："+Haming+"     "+(Haming<35?"正常":"汉明距离过大"));
+				System.out.println();
 		
 		
 		try {
@@ -294,7 +324,8 @@ public class Main {
 	//与库中图片特征点进行比对
 	
 	
-	public static void ExistPic(String path,String imgDao,String dao,String savepath) throws Exception {
+	public static void ExistPic(String path,String imgDao,String dao,String savepath,String Ham) throws Exception {
+		String Hash1=gray.getH(path);
 		File fl=new File(path);
 		BufferedImage img = ImageIO.read(fl);
 		RenderImage ri=new RenderImage(img);
@@ -315,7 +346,24 @@ public class Main {
 			
 			String source=f.getName().substring(0, f.getName().lastIndexOf("K"));
 			
-			String sources=f.getName().substring(0, f.getName().lastIndexOf("f"));
+			String sources;
+			if(f.getName().contains("pdf")) {
+				sources=f.getName().substring(0, f.getName().lastIndexOf("f"));
+			}else {
+				Matcher m =Pattern.compile("([^0-9]{1,})(\\d{1,})(.*)")
+				        .matcher(f.getName());
+				int inx=0;
+				while(m.find()) {
+				      for(int j = 0; j <= m.groupCount(); j++)
+				    	  
+				      //  System.out.println(m.end(1)+"group("+j+")[" + m.group(j) + "]");
+				      inx=m.end(1);
+				    }
+				System.out.println(f.getName()+":"+f.getName().substring(0,inx));
+				sources=f.getName().substring(0, inx);
+				
+			}
+			
 			kdli=reader.readComplete(f.getAbsolutePath());
 			
 			al1=kdli.getList();
@@ -352,14 +400,24 @@ public class Main {
 			}else {
 				System.out.print("相似匹配！   ");
 			}
+			int Haming=gray.diff(Hash1, gray.Reader(Ham+"\\"+source+"哈希.txt"));
+			
+			if((screen/ms.size())<5&&Haming<30&&ms.size()>=4) {
+				Result.Collection(sources, source,imgDao, result_1,Haming);
+			}
 			
 			BufferedImage img1=ImageIO.read(new File(name1));		
-			drawImage(img1, img, savepath+"\\匹配结果"+(t)+".jpg", ms);
+			//drawImage(img1, img, savepath+"\\匹配结果"+(t)+".jpg", ms);
 			System.out.print("   匹配率 ：  "+result_1+"  结果图像名称 ：匹配结果"+t+".jpg  "
-			+"    对比图像名称 ：    "+source+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen);
+			+"    对比图像名称 ：    "+source+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
+			+"    汉明距离 ："+Haming+"     "+(Haming<35?"正常":"汉明距离过大"));
 			System.out.println();
 			t++;
 		}
+		
+		AList.SortLimit();
+		//AList.ForEach();
+		AList.ForEach_Limit();
 	}
 	
 }

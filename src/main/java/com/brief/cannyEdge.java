@@ -208,7 +208,7 @@ public class cannyEdge {
 	
 	public static void main(String[]a) throws IOException {
 		long current=currentTimeMillis();
-		BufferedImage bi=ImageIO.read(new File("C:\\Users\\22682\\Desktop\\图片测试\\ydxk201703004.pdf_22.jpg"));
+		BufferedImage bi=ImageIO.read(new File("C:\\Users\\22682\\Desktop\\灰度.jpg"));
 		out.println("灰度化结束！");
 		double[][] source=cannyEdge.getGray(bi);
 		

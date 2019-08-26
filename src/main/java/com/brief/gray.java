@@ -142,6 +142,7 @@ public class gray {
 	public static int diff(String str1,String str2) {
 		int result=0;
 		int len=str1.length();
+		//System.out.println("str1: "+str1+" str2: "+str2);
 		for(int i=0;i<len;i++) {
 			if(str1.charAt(i)!=str2.charAt(i)) {
 				result++;
@@ -174,14 +175,13 @@ public class gray {
 		String str2=gray.getHash(ar2);
 		
 		int n=gray.diff(str1, str2);
-		System.out.println("汉明距离值："+n);
+		//System.out.println("汉明距离值："+n);
 		return n;
 		
 	}
 	public static void Writer(String path,String save) throws IOException {
 		
 		ObjectOutputStream out=null;
-		
 		try {
 			out=new ObjectOutputStream(new FileOutputStream(save));
 			File file1=new File(path);
@@ -206,9 +206,10 @@ public class gray {
 		
 		ObjectInputStream in=null;
 		String str="";
-		try {
+		try {System.out.println("RE : "+str+" : "+path);
 			in=new ObjectInputStream(new FileInputStream(path));
 			str=(String) in.readObject();
+			
 		}catch(IOException e) {
 			
 		} catch (ClassNotFoundException e) {

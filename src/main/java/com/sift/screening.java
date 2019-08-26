@@ -54,10 +54,10 @@ public class screening {
 			if(i==0) {
 				next.setX(dist[i+1].getX());
 				next.setY(dist[i+1].getY());
-				dist[i].setNext(next);
+				dist[i].setNext(dist[i+1]);
 				prior.setX(dist[i+2].getX());
 				prior.setY(dist[i+2].getY());
-				dist[i].setPrior(prior);
+				dist[i].setPrior(dist[i+2]);
 				MapPoint=dist[i+1].getMap();
 				next.x=MapPoint.x;
 				next.y=MapPoint.y;
@@ -69,10 +69,10 @@ public class screening {
 			}else if(i==dist.length-1) {
 				next.x=dist[i-1].x;
 				next.y=dist[i-1].y;
-				dist[i].setNext(next);
+				dist[i].setNext(dist[i-1]);
 				prior.x=dist[i-2].x;
 				prior.y=dist[i-2].y;
-				dist[i].setPrior(prior);
+				dist[i].setPrior(dist[i-2]);
 				MapPoint=dist[i-1].getMap();
 				next.x=MapPoint.x;
 				next.y=MapPoint.y;
@@ -84,10 +84,10 @@ public class screening {
 			}else {
 				next.x=dist[i+1].x;
 				next.y=dist[i+1].y;
-				dist[i].setNext(next);
+				dist[i].setNext(dist[i+1]);
 				prior.x=dist[i-1].x;
 				prior.y=dist[i-1].y;
-				dist[i].setPrior(prior);
+				dist[i].setPrior(dist[i-1]);
 				MapPoint=dist[i+1].getMap();
 				next.x=MapPoint.x;
 				next.y=MapPoint.y;
@@ -117,11 +117,19 @@ public class screening {
 			
 			double dist1=Math.abs(dist[i].nextVal-dist[i].Map.nextVal);
 			double dist2=Math.abs(dist[i].priorVal-dist[i].Map.priorVal);
+			double point1=Math.sqrt((dist[i].getX()*dist[i].getX())+(dist[i].getY()*dist[i].getY()));
+			double point2=Math.sqrt((dist[i].getMap().getX()*dist[i].getMap().getX())
+					+(dist[i].getMap().getY()*dist[i].getMap().getY()));
+			double dist3=Math.abs(point1-point2);
 			//System.out.println("dist1 : "+dist1+" dist2 : "+dist2);
 			dist[i].distance=Math.abs(dist1-dist2);
+			System.out.println(" 原点 Pos( "+dist[i].getX()+
+					" , "+dist[i].getY()+" ) "+" 对应点 Pos( "+dist[i].getMap().getX()+
+					" , "+dist[i].getMap().getY()+" ) "+"差值 ："+dist3);
+			System.out.println();
 			sum+=dist[i].distance;
 		}
-		
+		System.out.println();
 		
 		return sum;
 		

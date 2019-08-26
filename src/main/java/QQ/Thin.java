@@ -155,12 +155,13 @@ public class Thin {
         }
         return false;
     }
-
+    
+    
     public static void main(String[] args) {
-        try {
+        /*try {
             //原始图片路径
         	
-        	File file=new File("C:\\Users\\22682\\Desktop\\图片测试");
+        	File file=new File("C:\\Users\\22682\\Desktop\\ZPBig");
         	File[] files=file.listFiles();
         	for(File f:files) {
         		
@@ -168,14 +169,44 @@ public class Thin {
             BufferedImage iTwo = Two(image);
             
             BufferedImage iThin = Xihua(image,array);
-            ImageIO.write(iThin, "jpg", new File("C:\\Users\\22682\\Desktop\\细化结果\\"+f.getName()));
+            ImageIO.write(iThin, "jpg", new File("C:\\Users\\22682\\Desktop\\ZPBig细化\\"+f.getName()));
         	}
            System.out.println("细化结束：");
             
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+    	recur("D:\\20141110字模库");
         
+    }
+    public static void recur(String path) {
+    	File f=new File(path);
+    	if(f.isDirectory()) {
+    		System.out.println("是一个目录："+f.getAbsolutePath());
+    		File[] fs=f.listFiles();
+    		for(File f1:fs) {
+    			recur(f1.getAbsolutePath());
+    		}
+    	}else if(f.isFile()) {
+    		if(f.getName().contains("jpg")) {
+    			System.out.println("是一个JPG文件："+f.getName());	
+    			
+				try {
+					BufferedImage image = ImageIO.read(f);
+		            BufferedImage iTwo = Two(image);
+		            
+		            BufferedImage iThin = Xihua(image,array);
+		            ImageIO.write(iThin, "jpg", new File("D:\\细化数据\\"+f.getName()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                
+    		}else {
+    			System.out.println("是一个其他文件："+f.getName());
+    		}
+    		
+    	}
     }
 
 }
