@@ -165,8 +165,8 @@ public class Main {
 			g.drawOval((int) toPoint.x+ lw, (int) toPoint.y+ lh, 3, 3);
 			g.drawLine((int) fromPoint.x, (int) fromPoint.y, (int) toPoint.x
 					+ lw, (int) toPoint.y + lh);
-			g.drawString(str, (int) fromPoint.x, (int) fromPoint.y);
-			g.drawString(str1, (int) toPoint.x+lw, (int) toPoint.y+lh);
+			//g.drawString(str, (int) fromPoint.x, (int) fromPoint.y);
+			//g.drawString(str1, (int) toPoint.x+lw, (int) toPoint.y+lh);
 			index++;
 		}
 		
@@ -307,7 +307,7 @@ public class Main {
 		float n_3=ms.size();	//匹配的特征点个数
 		float result_1=n_3/n_1;   //占原图的比例
 		float result_2=n_3/n_2;   //占库中图的比例
-		System.out.print("   匹配率 ：  "+result_1+"  结果图像名称 ："+resultpath+".jpg  "
+		System.out.print("   匹配率 ：  "+screen+"  结果图像名称 ："+resultpath+".jpg  "
 				+"    对比图像名称 ：    "+path2+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
 				+"    汉明距离 ："+Haming+"     "+(Haming<35?"正常":"汉明距离过大"));
 				System.out.println();
@@ -402,15 +402,15 @@ public class Main {
 			}
 			int Haming=gray.diff(Hash1, gray.Reader(Ham+"\\"+source+"哈希.txt"));
 			
-			if((screen/ms.size())<5&&Haming<30&&ms.size()>=4) {
-				Result.Collection(sources, source,imgDao, result_1,Haming);
+			if(ms.size()>=4) {
+				Result.Collection(sources, source,imgDao, screen,Haming);
 			}
 			
 			BufferedImage img1=ImageIO.read(new File(name1));		
 			//drawImage(img1, img, savepath+"\\匹配结果"+(t)+".jpg", ms);
-			System.out.print("   匹配率 ：  "+result_1+"  结果图像名称 ：匹配结果"+t+".jpg  "
+			System.out.print("   匹配率 ：  "+screen+"  结果图像名称 ：匹配结果"+t+".jpg  "
 			+"    对比图像名称 ：    "+source+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
-			+"    汉明距离 ："+Haming+"     "+(Haming<35?"正常":"汉明距离过大"));
+			+"    汉明距离 ："+Haming+"     "+(Haming<20?"正常":"汉明距离过大"));
 			System.out.println();
 			t++;
 		}

@@ -22,7 +22,7 @@ public class AList {
 		}
 	}
 	public static void ForEach_Limit() {
-		if(array.size()>=10) {
+		if(array.size()>=15) {
 			for(int i=0;i<15;i++) {
 			PDFEntry e=array.get(i);
 			System.out.println(

@@ -30,7 +30,7 @@ public class SIFT {
     //进入特征点提取函数
     
     public int detectFeatures(ImagePixelArray img) {
-    	if(img.width>1500||img.height>1500) {
+    	if(img.width>1000||img.height>1000) {
     		return (detectFeaturesDownscaled(img, 0, 1.0f));
     	}else {
     		
