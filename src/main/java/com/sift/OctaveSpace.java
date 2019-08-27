@@ -332,9 +332,9 @@ public class OctaveSpace {
 		float c = (((left - middle) / a) - 1.0f) / 2.0f;
 		float b = middle - c * c * a;
 
-		if (c < -0.5 || c > 0.5)
+		/*if (c < -0.5 || c > 0.5)
 			throw (new IllegalStateException(
-					"InterpolateOrientation: off peak ]-0.5 ; 0.5["));
+					"InterpolateOrientation: off peak ]-0.5 ; 0.5["));*/
 		ref.degreeCorrection = c;
 		ref.peakValue = b;
 		return true;

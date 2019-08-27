@@ -50,17 +50,17 @@ public class cannyEdge {
 		out.println("二值化样本！");
 		int[][] p=new int[bi.getWidth()][bi.getHeight()];
 		getBin(bi,p);
-		try {
+		/*try {
 			ImageIO.write(bi, "jpg", new File("C:\\Users\\22682\\Desktop\\灰度.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		return source;
 		
 	}
 	
-	public static double[][] getSobelX(BufferedImage bi,double[][] sources) {
+	public static double[][] getSobelX(BufferedImage bi,double[][] sources,String savepath) {
 		double[][] Imgx=new double[bi.getWidth()][bi.getHeight()];
 		double[][] Imgy=new double[bi.getWidth()][bi.getHeight()];
 		double[][] source=new double[bi.getWidth()+2][bi.getHeight()+2];
@@ -112,11 +112,11 @@ public class cannyEdge {
 			}
 		}
 		out.println("边缘运算结束!");
-		getEdge(bi,Imgx,Imgy,result);
+		getEdge(bi,Imgx,Imgy,result,savepath);
 		return result;
 		
 	}
-	public static void getEdge(BufferedImage bi,double[][] x,double[][] y,double[][] result) {
+	public static void getEdge(BufferedImage bi,double[][] x,double[][] y,double[][] result,String savepath) {
 		out.println("开始插值寻找梯度！");
 		double[][] edge=new double[x.length][x[0].length];
 		for(int i=1;i<x.length-1;i++) {
@@ -182,14 +182,14 @@ public class cannyEdge {
 		}
 		out.println("边缘检测结束！");
 		try {
-			getImg(bi,edge);
+			getImg(bi,edge,savepath);
 		} catch (IOException e) {
 			
 			e.printStackTrace();
 		}
 		
 	}
-	public static void getImg(BufferedImage bi,double[][] edge) throws IOException {
+	public static void getImg(BufferedImage bi,double[][] edge,String savepath) throws IOException {
 		BufferedImage bis =new BufferedImage(bi.getWidth(),bi.getHeight(),bi.getType());
 		
 		for(int x=0;x<edge.length;x++) {
@@ -203,20 +203,52 @@ public class cannyEdge {
 				bis.setRGB(x, y, pixel);
 			}
 		}
-		ImageIO.write(bis, "jpg", new File("C:\\Users\\22682\\Desktop\\结果"+(qs++)+".jpg"));
+		ImageIO.write(bis, "jpg", new File(savepath));
 	}
 	
 	public static void main(String[]a) throws IOException {
 		long current=currentTimeMillis();
-		BufferedImage bi=ImageIO.read(new File("C:\\Users\\22682\\Desktop\\灰度.jpg"));
-		out.println("灰度化结束！");
-		double[][] source=cannyEdge.getGray(bi);
-		
-		double[][] sources=getSobelX(bi,source);
-		out.println("卷积结束!");
-		//getImg(bi,sources);
+		recur("C:\\Users\\22682\\Desktop\\所截拓片甲骨字数据集_2018_11");
 		out.println("共用时："+(currentTimeMillis()-current)/1000);
 	}
+	public static void recur(String path) {
+    	File f=new File(path);
+    	if(f.isDirectory()) {
+    		System.out.println("是一个目录："+f.getAbsolutePath());
+    		File[] fs=f.listFiles();
+    		for(File f1:fs) {
+    			recur(f1.getAbsolutePath());
+    		}
+    	}else if(f.isFile()) {
+    		if(f.getName().contains("jpg")) {
+    			System.out.println("是一个JPG文件："+f.getName());	
+    			
+				try {
+					String save="C:\\Users\\22682\\Desktop\\1\\Canny\\"+f.getName();
+					BufferedImage bi=ImageIO.read(f);
+					
+					double[][] source=cannyEdge.getGray(bi);
+					double[][] sources=getSobelX(bi,source,save);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                
+    		}else {
+    			System.out.println("是一个其他文件："+f.getName());
+    		}
+    		
+    	}
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static void getBin(BufferedImage bi,int[][] p) {
 		for(int y=0;y<bi.getWidth();y++) {

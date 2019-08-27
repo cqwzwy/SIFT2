@@ -188,7 +188,10 @@ public class Main {
 		File[] files=file.listFiles();
 		
 		for(File f:files) {
-			
+			String save=savepath+"\\"+f.getName().substring(0, f.getName().lastIndexOf("."))+"KD数据.txt";
+			if(new File(save).exists()) {
+				continue;
+			}
 			String name = f.getName();
 			String absname=f.getAbsolutePath();
 			
@@ -210,7 +213,7 @@ public class Main {
 				kdli.setImageFile(f.getName());
 				kdli.setWidth(ri.getWidth());
 				kdli.setHeight(ri.getHeight());
-				String save=savepath+"\\"+f.getName().substring(0, f.getName().lastIndexOf("."))+"KD数据.txt";
+				
 				KDFeaturePointWriter.writeComplete(save, kdli);
 				gray.Writer(f.getAbsolutePath(), Haming+"\\"+f.getName().substring(0,f.getName().lastIndexOf("."))+"哈希.txt");
 			} catch (IOException e) {
@@ -396,6 +399,7 @@ public class Main {
 		File[] files=file.listFiles();
 		int t=0;
 		int i=0;
+		System.out.println(savepath);
 		for(File f:files) {
 			
 			
@@ -451,16 +455,16 @@ public class Main {
 			
 			float parcent=0;
 			//结果进行分析
-			System.out.println("——————————！！！！——————————");
+			//System.out.println("——————————！！！！——————————");
 			if(result_1>=0.9&&result_2>=0.9) {
-				System.out.print("完全匹配！   ");
+				//System.out.print("完全匹配！   ");
 				parcent=100;
 				Info info=new ResultList().new Info();
 				info.setFile(sources);
 				info.setSample(parcent);
 				info.setName(source);	
 			}else {
-				System.out.print("相似匹配！   ");
+				//System.out.print("相似匹配！   ");
 			}
 			int Haming=gray.diff(Hash1, gray.Reader(Ham+"\\"+source+"哈希.txt"));
 			
@@ -470,16 +474,16 @@ public class Main {
 			
 			BufferedImage img1=ImageIO.read(new File(name1));		
 			//drawImage(img1, img, savepath+"\\匹配结果"+(t)+".jpg", ms);
-			System.out.print("   匹配率 ：  "+screen+"  结果图像名称 ：匹配结果"+t+".jpg  "
+			/*System.out.print("   匹配率 ：  "+screen+"  结果图像名称 ：匹配结果"+t+".jpg  "
 			+"    对比图像名称 ：    "+source+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
-			+"    汉明距离 ："+Haming+"     "+(Haming<20?"正常":"汉明距离过大"));
-			System.out.println();
-			t++;
+			+"    汉明距离 ："+Haming+"     "+(Haming<20?"正常":"汉明距离过大"));*/
+			//System.out.println();
+			//t++;
 		}
 		
 		AList.SortLimit();
 		//AList.ForEach();
-		AList.ForEach_Limit();
+		AList.ForEach_Limit(savepath);
 	}
 	
 }

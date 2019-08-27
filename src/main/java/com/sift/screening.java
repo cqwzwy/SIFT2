@@ -146,7 +146,7 @@ public class screening {
 		/*for(int i=0;i<absdist.length;i++) {
 			System.out.println("差值 : "+absdist[i]);
 		}*/
-		System.out.println();
+		//System.out.println();
 		double[] end=new double[absdist.length-1];
 		for(int i=1;i<absdist.length;i++) {
 			end[i-1]=Math.abs(absdist[i]-absdist[i-1]);
@@ -170,7 +170,7 @@ public class screening {
 			}
 			//System.out.println("结果差值 : "+(end[i]));
 		}
-		System.out.println("预测值："+number_result+"  占比 :  "+((double)number_result/end.length));
+		//System.out.println("预测值："+number_result+"  占比 :  "+((double)number_result/end.length));
 		
 		return ((double)number_result/end.length);
 		

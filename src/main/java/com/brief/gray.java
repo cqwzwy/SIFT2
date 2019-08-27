@@ -205,7 +205,7 @@ public class gray {
 		
 		ObjectInputStream in=null;
 		String str="";
-		try {System.out.println("RE : "+str+" : "+path);
+		try {
 			in=new ObjectInputStream(new FileInputStream(path));
 			str=(String) in.readObject();
 			

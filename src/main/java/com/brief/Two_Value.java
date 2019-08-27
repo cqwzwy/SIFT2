@@ -27,7 +27,7 @@ public class Two_Value {
 			}
 		}
 		//p=Thin.getThin(p);
-		cannyEdge.getImg(bi, p);
+		//cannyEdge.getImg(bi, p);
 		try {
 			ImageIO.write(bi, "jpg", new File("C:\\Users\\22682\\Desktop\\t_v.jpg"));
 		} catch (IOException e) {

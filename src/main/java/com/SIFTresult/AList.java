@@ -1,5 +1,8 @@
 package com.SIFTresult;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 public class AList {
 	
 	private static java.util.ArrayList<PDFEntry> array=new java.util.ArrayList<PDFEntry>();
@@ -21,10 +24,15 @@ public class AList {
 			
 		}
 	}
-	public static void ForEach_Limit() {
-		System.out.println();
-		if(array.size()>=15) {
-			for(int i=0;i<15;i++) {
+	public static void ForEach_Limit(String path) {
+		try {
+			System.setOut(new PrintStream(path+"\\"+path.substring(path.lastIndexOf("\\"))+".txt"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(array.size()>=30) {
+			for(int i=0;i<30;i++) {
 			PDFEntry e=array.get(i);
 			System.out.println();
 			System.out.println(
@@ -36,12 +44,14 @@ public class AList {
 			System.out.println(
 					"  Re对于信息 : "+e.getPath2()+" Haming : "+e.getH2()
 					+"  Re : "+e.getR2());
-			//ImgList.copy(e.getPath2()+".jpg", "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
+			ImgList.copy(e.getPath2()+".jpg", path+"\\"
+					+e.getPath2().substring(e.getPath2().lastIndexOf("\\"))+".jpg");
 			
 			}
 		}else {
 			System.out.println();
-			for(PDFEntry e:array) {
+			for(int i=0;i<array.size();i++) {
+				PDFEntry e=array.get(i);
 				System.out.println();
 				System.out.println(
 						"PDF文件名称： "+e.getName()
@@ -53,7 +63,8 @@ public class AList {
 						"  Re对于信息 : "+e.getPath2()+" Haming : "+e.getH2()
 						+"  Re : "+e.getR2());
 				
-				//ImgList.copy(e.getPath2()+".jpg", "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
+				ImgList.copy(e.getPath2()+".jpg", path+"\\"
+						+e.getPath2().substring(e.getPath2().lastIndexOf("\\"))+".jpg");
 			}
 		}
 		
@@ -85,6 +96,7 @@ public class AList {
 			PDFEntry e=array.get(i);
 			re[i]=e.getRe();
 			Haming[i]=e.getH2();
+			
 		}
 		
 		for(int i=0;i<re.length;i++) {
@@ -102,6 +114,7 @@ public class AList {
 					array.set(j, temp);
 				}
 			}
+			
 		}
 		
 		for(int i=0;i<Haming.length;i++) {
