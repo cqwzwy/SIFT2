@@ -12,27 +12,28 @@ public class Compared_Enter {
 	
 	public static void main(String[] argv) {
 		long current=System.currentTimeMillis();
-		String pic_path="C:\\Users\\22682\\Desktop\\ZPBig细化\\ydxk201302003.pdf_21.jpg";
-		String Dao="C:\\Users\\22682\\Desktop\\图片测试特征点文件细化后";
+		String pic_path="D:\\细化数据\\001000b11235.jpg";
+		String Dao="D:\\数据SIFT";
 		String path4="D:\\testmaven\\照片1特征点";
-		String imgDao  ="C:\\Users\\22682\\Desktop\\细化结果";
-		String resultpath="C:\\Users\\22682\\Desktop\\结果数据1.jpg";
-		String Haming="C:\\Users\\22682\\Desktop\\细化哈希";
-		String path2="C:\\Users\\22682\\Desktop\\ZPBig细化\\ydxk201302003.pdf_22.jpg";
+		String imgDao  ="D:\\细化数据";
+		String resultpath="D:\\数据2";
+		String Haming="D:\\数据哈希";
+		String path2="C:\\Users\\22682\\Desktop\\ZPBig细化\\甲骨文与圣书字动物字构形比较研究_郑丽娜23.jpg";
 		//String path2="C:\\Users\\22682\\Desktop\\ydxk201302019.pdf_1.jpg";
 		File file=new File(resultpath);
 		File file2=new File(Haming);
-		/*if(!file.exists()) {
+		if(!file.exists()) {
 			
 			file.mkdirs();
-		}*/
+		}
 		/*if(!file2.exists()) {
 			
 			file2.mkdirs();
 		}*/
 		try {
-			Main.contrast_Two(pic_path, path2, resultpath);
-			//Main.ExistPic(pic_path, imgDao, Dao, resultpath,Haming);
+			//Main.Files_Img(pic_path, path2);
+			//Main.contrast_Two(pic_path, path2, resultpath);
+			Main.ExistPic(pic_path, imgDao, Dao, resultpath,Haming);
 			//Main.FilesFeatureRequest(imgDao, resultpath,Haming);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

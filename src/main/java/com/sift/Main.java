@@ -264,6 +264,53 @@ public class Main {
 	}
 	
 	
+    
+    //单个文件与特征点文件比对
+    public static void Files_Img(String path,String path2) throws IOException {
+    	File f1=new File(path);
+		
+		File f2=new File(path2);
+		
+		BufferedImage bi1=ImageIO.read(f1);
+		
+		RenderImage ri1=new RenderImage(bi1);
+		
+		
+		SIFT sift=new SIFT();
+		
+		
+		sift.detectFeatures(ri1.toPixelFloatArray(null));
+		
+		
+		
+		List<KDFeaturePoint> p1=sift.getGlobalKDFeaturePoints();
+		KDFeaturePointInfoReader reader=new KDFeaturePointInfoReader();
+		KDFeaturePointListInfo kdli=new KDFeaturePointListInfo();
+		List<KDFeaturePoint> p2;
+		kdli=reader.readComplete(path2);
+		p2=kdli.getList();
+		System.out.println(f1.getName()+"  特征点数目 ："+p2.size());
+		System.out.println(f2.getName()+"  特征点数目 ："+p1.size());
+		List<Match> ms=MatchKeys.findMatchesBBF(p1, p2);
+		double screen=0.0;
+		ms=MatchKeys.filterMore(ms);
+		if(ms.size()>=3) {
+			screen=screening.Screen(ms,path,path2);
+		}
+		
+		float result=0.0f;
+		float n_1=p1.size();    //原图
+		float n_2=p2.size();	//库中的图
+		float n_3=ms.size();	//匹配的特征点个数
+		float result_1=n_3/n_1;   //占原图的比例
+		float result_2=n_3/n_2;   //占库中图的比例
+		System.out.print("   匹配率 ：  "+screen
+				+"    对比图像名称 ：    "+path2+"   匹配的特征点数目 ：  "+ms.size()+" 轮廓差值 :"+screen+"    "+(ms.size()<3?"错误结果":"检测队列")
+				);
+				System.out.println();
+		
+		
+    }
 	
 	//两张图片图片对比
 
@@ -294,12 +341,20 @@ public class Main {
 		List<KDFeaturePoint> p2=sift2.getGlobalKDFeaturePoints();
 		System.out.println(f1.getName()+"  特征点数目 ："+p2.size());
 		System.out.println(f2.getName()+"  特征点数目 ："+p1.size());
-		List<Match> ms=MatchKeys.findMatchesBBF(p1, p2);
-		double screen=0.0;
-		ms=MatchKeys.filterMore(ms);
-		if(ms.size()>=3) {
-			screen=screening.Screen(ms,path,path2);
+		
+		List<Match> ms = MatchKeys.findMatchesBBF(p1, p2);
+		List<Match> ms1 = MatchKeys.findMatchesBBF(p2, p1);
+		ms = MatchKeys.filterMore(ms);
+		ms1 = MatchKeys.filterMore(ms1);
+		double screen=0;
+		double screen1=0;
+		if(ms.size()>=3&&ms1.size()>=3) {
+		screen=screening.Screen(ms,path,path2);
+		screen1=screening.Screen(ms1,path,path2);
 		}
+		screen=screen>screen1?screen:screen1;
+		ms=ms.size()>ms1.size()?ms:ms1;
+		
 		int Haming=gray.diff(gray.getH(path),gray.getH(path2));
 		float result=0.0f;
 		float n_1=p1.size();    //原图
@@ -350,7 +405,7 @@ public class Main {
 			if(f.getName().contains("pdf")) {
 				sources=f.getName().substring(0, f.getName().lastIndexOf("f"));
 			}else {
-				Matcher m =Pattern.compile("([^0-9]{1,})(\\d{1,})(.*)")
+				/*Matcher m =Pattern.compile("([^0-9]{1,})(\\d{1,})(.*)")
 				        .matcher(f.getName());
 				int inx=0;
 				while(m.find()) {
@@ -360,7 +415,8 @@ public class Main {
 				      inx=m.end(1);
 				    }
 				System.out.println(f.getName()+":"+f.getName().substring(0,inx));
-				sources=f.getName().substring(0, inx);
+				sources=f.getName().substring(0, inx);*/
+				sources=source;
 				
 			}
 			
@@ -368,14 +424,20 @@ public class Main {
 			
 			al1=kdli.getList();
 			
-			List<Match> ms = MatchKeys.findMatchesBBF(al1, al);
+			List<Match> ms = MatchKeys.findMatchesBBF(al, al1);
+			List<Match> ms1 = MatchKeys.findMatchesBBF(al1, al);
 			ms = MatchKeys.filterMore(ms);
+			ms1 = MatchKeys.filterMore(ms1);
 			double screen=0;
+			double screen1=0;
 			String name1=imgDao+"\\"+f.getName().substring(0, f.getName().lastIndexOf("K"))+".jpg";
 			String name2=path;
-			if(ms.size()>=3) {
+			if(ms.size()>=3&&ms1.size()>=3) {
 			screen=screening.Screen(ms,name1,name2);
+			screen1=screening.Screen(ms1,name1,name2);
 			}
+			screen=screen>screen1?screen:screen1;
+			ms=ms.size()>ms1.size()?ms:ms1;
 			float result=0.0f;
 			float n_1=al.size();    //原图
 			float n_2=al1.size();	//库中的图
@@ -402,7 +464,7 @@ public class Main {
 			}
 			int Haming=gray.diff(Hash1, gray.Reader(Ham+"\\"+source+"哈希.txt"));
 			
-			if(ms.size()>=4) {
+			if(screen>0.1&&ms.size()>=4) {
 				Result.Collection(sources, source,imgDao, screen,Haming);
 			}
 			

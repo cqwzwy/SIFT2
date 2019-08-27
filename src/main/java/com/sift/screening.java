@@ -126,10 +126,10 @@ public class screening {
 			absdist[i]=dist3;
 			//System.out.println("dist1 : "+dist1+" dist2 : "+dist2);
 			dist[i].distance=Math.abs(dist1-dist2);
-			System.out.println(" 原点 Pos( "+dist[i].getX()+
+			/*System.out.println(" 原点 Pos( "+dist[i].getX()+
 					" , "+dist[i].getY()+" ) "+" 对应点 Pos( "+dist[i].getMap().getX()+
 					" , "+dist[i].getMap().getY()+" ) "+"差值 ："+dist3);
-			System.out.println();
+			System.out.println();*/
 			sum+=dist[i].distance;
 		}
 		for(int i=0;i<absdist.length;i++) {
@@ -143,9 +143,9 @@ public class screening {
 			}
 			
 		}
-		for(int i=0;i<absdist.length;i++) {
+		/*for(int i=0;i<absdist.length;i++) {
 			System.out.println("差值 : "+absdist[i]);
-		}
+		}*/
 		System.out.println();
 		double[] end=new double[absdist.length-1];
 		for(int i=1;i<absdist.length;i++) {
@@ -168,7 +168,7 @@ public class screening {
 			if(end[i]<0.6) {
 				number_result++;
 			}
-			System.out.println("结果差值 : "+(end[i]));
+			//System.out.println("结果差值 : "+(end[i]));
 		}
 		System.out.println("预测值："+number_result+"  占比 :  "+((double)number_result/end.length));
 		

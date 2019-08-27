@@ -22,22 +22,38 @@ public class AList {
 		}
 	}
 	public static void ForEach_Limit() {
+		System.out.println();
 		if(array.size()>=15) {
 			for(int i=0;i<15;i++) {
 			PDFEntry e=array.get(i);
+			System.out.println();
 			System.out.println(
 					"PDF文件名称： "+e.getName()
-					+"        最高相关度："+e.getRe()+"  对应照片 ："+e.getImgBest()+"  Haming : "+e.getHaming()+"  图片路径："+e.getPath());
-			ImgList.copy(e.getPath()+"\\"+e.getImgBest()+".jpg", "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
+					+"        最高相关度："+e.getRe()+" 最小Haming ："+e.getHaming());
+			System.out.println(
+					"  Haming对于信息 : "+e.getPath()+" Haming : "+e.getH1()
+					+"  Re : "+e.getR1());
+			System.out.println(
+					"  Re对于信息 : "+e.getPath2()+" Haming : "+e.getH2()
+					+"  Re : "+e.getR2());
+			//ImgList.copy(e.getPath2()+".jpg", "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
 			
 			}
 		}else {
+			System.out.println();
 			for(PDFEntry e:array) {
+				System.out.println();
 				System.out.println(
 						"PDF文件名称： "+e.getName()
-						+"        最高相关度："+e.getRe()+"  对应照片 ："+e.getImgBest()+"  Haming : "+e.getHaming()+"  图片路径："+e.getPath());
+						+"        最高相关度："+e.getRe()+" 最小Haming ："+e.getHaming());
+				System.out.println(
+						"  Haming对于信息 : "+e.getPath()+" Haming : "+e.getH1()
+						+"  Re : "+e.getR1());
+				System.out.println(
+						"  Re对于信息 : "+e.getPath2()+" Haming : "+e.getH2()
+						+"  Re : "+e.getR2());
 				
-				ImgList.copy(e.getPath(), "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
+				//ImgList.copy(e.getPath2()+".jpg", "C:\\Users\\22682\\Desktop\\结果数据1\\"+e.getImgBest()+".jpg");
 			}
 		}
 		
@@ -61,25 +77,69 @@ public class AList {
 		return -1;
 	}
 	
-	
+	//排序规则
 	public static void SortLimit() {
 		double[] re=new double[array.size()];
+		double[] Haming=new double[array.size()];
 		for(int i=0;i<array.size();i++) {
 			PDFEntry e=array.get(i);
-			re[i]=e.getHaming();
+			re[i]=e.getRe();
+			Haming[i]=e.getH2();
 		}
 		
 		for(int i=0;i<re.length;i++) {
 			for(int j=i+1;j<re.length;j++) {
-				if(re[i]>re[j]) {
+				if(re[i]<re[j]) {
 					double n=re[i];
 					re[i]=re[j];
 					re[j]=n;
+					n=Haming[i];
+					Haming[i]=Haming[j];
+					Haming[j]=n;
 					PDFEntry temp=array.get(i);
 					PDFEntry temp2=array.get(j);
 					array.set(i, temp2);
 					array.set(j, temp);
 				}
+			}
+		}
+		
+		for(int i=0;i<Haming.length;i++) {
+			
+			for(int j=i+1;j<Haming.length;j++) {
+				if(Haming[i]>Haming[j]||(Haming[i]==Haming[j]&&re[i]<re[j])
+						) {
+					double n=re[i];
+					re[i]=re[j];
+					re[j]=n;
+					n=Haming[i];
+					Haming[i]=Haming[j];
+					Haming[j]=n;
+					PDFEntry temp=array.get(i);
+					PDFEntry temp2=array.get(j);
+					array.set(i, temp2);
+					array.set(j, temp);
+				}
+				
+			}
+		}
+		for(int i=0;i<Haming.length;i++) {
+			
+			for(int j=i+1;j<Haming.length;j++) {
+				if((Haming[i]>Haming[j]-5&&re[i]*2<re[j])
+						) {
+					double n=re[i];
+					re[i]=re[j];
+					re[j]=n;
+					n=Haming[i];
+					Haming[i]=Haming[j];
+					Haming[j]=n;
+					PDFEntry temp=array.get(i);
+					PDFEntry temp2=array.get(j);
+					array.set(i, temp2);
+					array.set(j, temp);
+				}
+				
 			}
 		}
 	}

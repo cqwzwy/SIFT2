@@ -11,7 +11,12 @@ public class Result {
 			e.setName(name);
 			e.setRe(re);
 			e.setHaming(Haming);
-			e.setPath(path);
+			e.setPath(path+"\\"+img);
+			e.setPath2(path+"\\"+img);
+			e.setH1(Haming);
+			e.setH2(Haming);
+			e.setR1(re);
+			e.setR2(re);
 			AList.add(e);
 		}else {
 			int index=AList.containIndex(name);
@@ -19,9 +24,19 @@ public class Result {
 			
 			if(Haming<e.getHaming()) {
 				e.setImgBest(img);
-				e.setRe(re);
+				//e.setRe(re);
 				e.setHaming(Haming);
-				e.setPath(path);
+				e.setPath(path+"\\"+img);
+				e.setH1(Haming);
+				e.setR1(re);
+			}
+			if(re>e.getRe()) {
+				e.setImgBest(img);
+				e.setRe(re);
+				//e.setHaming(Haming);
+				e.setPath2(path+"\\"+img);
+				e.setH2(Haming);
+				e.setR2(re);
 			}
 			img=e.getImgName()+img+"&";
 			e.setImgName(img);

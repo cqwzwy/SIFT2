@@ -134,7 +134,6 @@ public class gray {
 		ar1=gray.getDCT(ar1);
 		
 		String str1=gray.getHash(ar1);
-		
 		return str1;
 		
 	}
