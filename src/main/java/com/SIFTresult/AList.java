@@ -1,6 +1,8 @@
 package com.SIFTresult;
 
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 public class AList {
@@ -12,6 +14,10 @@ public class AList {
 	}
 	public static void set(int index,PDFEntry entry) {
 		array.set(index, entry);
+		
+	}
+	public static void Delete() {
+		array.clear();
 		
 	}
 	public static void ForEach() {
@@ -31,8 +37,8 @@ public class AList {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		if(array.size()>=30) {
-			for(int i=0;i<30;i++) {
+		if(array.size()>=35) {
+			for(int i=0;i<35;i++) {
 			PDFEntry e=array.get(i);
 			System.out.println();
 			System.out.println(
@@ -67,6 +73,7 @@ public class AList {
 						+e.getPath2().substring(e.getPath2().lastIndexOf("\\"))+".jpg");
 			}
 		}
+		System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		
 	}
 	public static PDFEntry get(int index) {
